@@ -48,7 +48,7 @@ function addRowToTable(data) {
     cityCell.innerHTML = data.city;
     phoneNoCell.innerHTML = data.phone;
     
-    console.log(data.avatar);
+    // console.log(data.avatar);
 
     if (data.avatar == "") {
         imageCell.innerHTML = `<img src="" alt="image not uploaded" width="100px" height="100px">`;
