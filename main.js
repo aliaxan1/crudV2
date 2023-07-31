@@ -59,8 +59,9 @@ function loadTable(event){
 
 //show complete api data
 function showdata(data){
-    for (let i = 0; i < data.length; i++) {
-        addRowToTable(data[i]);        
+    document.getElementsByTagName('tbody')[0].innerHTML = "";
+    for (data in dataFromApi) {
+        addRowToTable(dataFromApi[data]);        
     }
 } 
 
@@ -79,6 +80,16 @@ function addRowToTable(data) {
     // var cityCell = row.insertCell();
     // var phoneNoCell = row.insertCell();
     var imageCell = row.insertCell();
+    const actionCell = row.insertCell();
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", () => editUser(index));
+        actionCell.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Remove";
+        deleteButton.addEventListener("click", () => deleteUser(data));
+        actionCell.appendChild(deleteButton);
 
     firstNameCell.innerHTML = data.first_name;
     lastNameCell.innerHTML = data.last_name;
@@ -125,3 +136,14 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
    
     document.getElementById("myForm").reset();
 });
+// Function to delete a user
+function deleteUser(data) {
+    // Remove the user from the array
+    console.log(data);
+    dataFromApi.splice(dataFromApi.indexOf(data), 1);
+
+    // Render users in the table
+     showdata(dataFromApi);
+    console.log(dataFromApi);
+    // window.location.reload();
+}

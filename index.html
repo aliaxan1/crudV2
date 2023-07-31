@@ -12,7 +12,7 @@
         <h1 class="display-3 text-center">RECORDS</h1>
         <!-- Search BAR -->
         <div>
-            <form class="d-flex">
+            <form class="d-flex" id="searchForm">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
@@ -29,6 +29,7 @@
                     <!-- <th scope="col">City</th>
                     <th scope="col">Phone No</th> -->
                     <th scope="col">Image</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
                 <tbody>
@@ -47,7 +48,7 @@
                   <li class="page-item"  value='1' id='page1' onclick="loadTable(event);"><a class="page-link" >1</a></li>
                   <li class="page-item"  value='2' id='page2' onclick="loadTable(event);"><a class="page-link" >2</a></li>
                   <li class="page-item"  value='3' id='page3' onclick="loadTable(event);"><a class="page-link" >3</a></li>
-                 
+                  <li class="page-item"  value='4' id='page4' onclick="loadTable(event);"><a class="page-link" >4</a></li>
                 </ul>
               </nav>
         </div>
