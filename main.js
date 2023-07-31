@@ -1,5 +1,5 @@
-
-
+let notSearch = true;
+var searchResult = [];
 
 let dataFromApi = [];   //array to store data from API
 const link = "https://reqres.in/api/users";  //link to API
@@ -44,10 +44,10 @@ function loadTable(event){
     let pageBtnNO = value;
     startElement = ((pageBtnNO-1)*itemsPerPage)+1;
     endElement = pageBtnNO*itemsPerPage;
-    console.log(startElement,endElement);
-    document.getElementsByTagName('tbody')[0].innerHTML = "";
+    // console.log(startElement,endElement);
+    document.getElementsByTagName('tbody')[0].innerHTML = "";// clear the complete table
     for (let i = startElement-1; i < endElement; i++) {
-        // clear the complete table
+        
         
         addRowToTable(dataFromApi[i]);        
     }
@@ -60,11 +60,16 @@ function loadTable(event){
 //show complete api data
 function showdata(data){
     document.getElementsByTagName('tbody')[0].innerHTML = "";
-    for (data in dataFromApi) {
-        addRowToTable(dataFromApi[data]);        
+   if (notSearch) {
+            for ( data in dataFromApi) {
+            addRowToTable(dataFromApi[data]);        
+            } 
+    } else {
+    for ( data in searchResult) {
+        addRowToTable(searchResult[data]);        
+        } 
     }
-} 
-
+}
 
 
 // Function to add a new row to the table
@@ -147,3 +152,21 @@ function deleteUser(data) {
     console.log(dataFromApi);
     // window.location.reload();
 }
+
+
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    var searchValue = document.getElementById("search").value;
+    // console.log("121332",searchValue);
+    ;
+    // console.log("dataFromApi",dataFromApi);
+    // // console.log("dataaaa",data);
+    for (var i = 0; i < dataFromApi.length; i++) {
+        if (dataFromApi[i].first_name.toLowerCase().includes(searchValue.toLowerCase())) {
+            searchResult.push(dataFromApi[i]);
+        }
+    }
+    notSearch = false;  
+    showdata(searchResult);
+    document.getElementById("searchForm").reset();
+});
