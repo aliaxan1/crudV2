@@ -1,16 +1,22 @@
 let notSearch = true;
 var searchResult = [];
-
+let tempArr = [];   //array to store data temporarily from API
 let dataFromApi = [];   //array to store data from API
 const link = "https://reqres.in/api/users";  //link to API
 
 
 itemsPerPage=4;
 
+
+const fetchTableData = () => {
+    // function to fetch data from API
+}
+
 async function getData(pageNo) {
     const response = await fetch(link + `?page=${pageNo}` );
     const data = await response.json();
     let reqData = data.data;
+    console.log("reqData",reqData);
     return reqData;
 }   //function to get data from API
 
@@ -19,11 +25,11 @@ for(let pageNo=1;pageNo<3;pageNo++){
     getData(pageNo)  //calling the function
         .then((data) => {
            if (pageNo == 1) {
-                abc = data;
+                tempArr = data;
                 // console.log(abc);
            } 
             if (pageNo == 2) {
-                dataFromApi = [...abc,...data];
+                dataFromApi = [...tempArr,...data];
                 showdata(dataFromApi);
                 
                 
@@ -31,7 +37,7 @@ for(let pageNo=1;pageNo<3;pageNo++){
 
         })
         .catch((error) => {
-            console.log(error);
+            console.log("error",error);
          });  //adding data to the table          
 
 }
@@ -130,12 +136,34 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         first_name: firstName,
         last_name: lastName,
         id: rollNo,
-        // city: city,
-        // phoneNo: phoneNo,
         avatar: image
     };
     
-   
+let pageNooo = 1;
+
+   fetch(link + + `?page=${pageNooo}`, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+   })
+// fetch(link, {
+//     method: 'POST',
+//     body: JSON.stringify(formData),
+//     headers: {
+//         'Content-type': 'application/json; charset=UTF-8',
+//     },
+// })
+   .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+    })
+   .catch((error) => {
+         console.log(error);
+    });
+
+
     addRowToTable(formData);
     
    
@@ -169,4 +197,5 @@ document.getElementById("searchForm").addEventListener("submit", function(event)
     notSearch = false;  
     showdata(searchResult);
     document.getElementById("searchForm").reset();
+    searchResult = [];
 });
