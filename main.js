@@ -1,30 +1,68 @@
-let abc = null;
 
-async function getData() {
-    const response = await fetch("https://reqres.in/api/users");
+
+
+let dataFromApi = [];   //array to store data from API
+const link = "https://reqres.in/api/users";  //link to API
+
+
+itemsPerPage=4;
+
+async function getData(pageNo) {
+    const response = await fetch(link + `?page=${pageNo}` );
     const data = await response.json();
     let reqData = data.data;
-    abc = reqData;
     return reqData;
+}   //function to get data from API
+
+for(let pageNo=1;pageNo<3;pageNo++){
+    
+    getData(pageNo)  //calling the function
+        .then((data) => {
+           if (pageNo == 1) {
+                abc = data;
+                // console.log(abc);
+           } 
+            if (pageNo == 2) {
+                dataFromApi = [...abc,...data];
+                showdata(dataFromApi);
+                
+                
+            }
+
+        })
+        .catch((error) => {
+            console.log(error);
+         });  //adding data to the table          
+
 }
 
-getData()
-    .then((data) => {
-        console.log(data);
-        abc = data;
 
-        // Add data from API response to the table
-        for (let i = 0; i < abc.length; i++) {
-            addRowToTable(abc[i]);
-        }
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+function loadTable(event){
+    const liElement = event.target.closest('li'); 
+    const value = liElement.getAttribute('value');
+    const itemsPerPage = 4;
+    let pageBtnNO = value;
+    startElement = ((pageBtnNO-1)*itemsPerPage)+1;
+    endElement = pageBtnNO*itemsPerPage;
+    console.log(startElement,endElement);
+    document.getElementsByTagName('tbody')[0].innerHTML = "";
+    for (let i = startElement-1; i < endElement; i++) {
+        // clear the complete table
+        
+        addRowToTable(dataFromApi[i]);        
+    }
+}; 
 
 
 
 
+
+//show complete api data
+function showdata(data){
+    for (let i = 0; i < data.length; i++) {
+        addRowToTable(data[i]);        
+    }
+} 
 
 
 
@@ -38,15 +76,15 @@ function addRowToTable(data) {
     var firstNameCell = row.insertCell();
     var lastNameCell = row.insertCell();
     var rollNoCell = row.insertCell();
-    var cityCell = row.insertCell();
-    var phoneNoCell = row.insertCell();
+    // var cityCell = row.insertCell();
+    // var phoneNoCell = row.insertCell();
     var imageCell = row.insertCell();
 
     firstNameCell.innerHTML = data.first_name;
     lastNameCell.innerHTML = data.last_name;
     rollNoCell.innerHTML = data.id;
-    cityCell.innerHTML = data.city;
-    phoneNoCell.innerHTML = data.phone;
+    // cityCell.innerHTML = data.city;
+    // phoneNoCell.innerHTML = data.phone;
     
     // console.log(data.avatar);
 
@@ -67,8 +105,8 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
     var firstName = document.getElementById("validationDefault01").value;
     var lastName = document.getElementById("validationDefault02").value;
     var rollNo = document.getElementById("validationDefault06").value;
-    var city = document.getElementById("validationDefault03").value;
-    var phoneNo = document.getElementById("validationDefault04").value;
+    // var city = document.getElementById("validationDefault03").value;
+    // var phoneNo = document.getElementById("validationDefault04").value;
     var image = document.getElementById("validationDefault05").value;
     
     // Create an object to hold the data
@@ -76,8 +114,8 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         first_name: firstName,
         last_name: lastName,
         id: rollNo,
-        city: city,
-        phoneNo: phoneNo,
+        // city: city,
+        // phoneNo: phoneNo,
         avatar: image
     };
     
@@ -86,4 +124,4 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
     
    
     document.getElementById("myForm").reset();
-});s
+});

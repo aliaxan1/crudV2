@@ -26,8 +26,8 @@
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">Roll No</th>
-                    <th scope="col">City</th>
-                    <th scope="col">Phone No</th>
+                    <!-- <th scope="col">City</th>
+                    <th scope="col">Phone No</th> -->
                     <th scope="col">Image</th>
                 </tr>
             </thead>
@@ -41,20 +41,13 @@
         <!-- Pagination -->
         <div>
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
+                <ul class="pagination justify-content-center" id="pagination">
+                  
+                 
+                  <li class="page-item"  value='1' id='page1' onclick="loadTable(event);"><a class="page-link" >1</a></li>
+                  <li class="page-item"  value='2' id='page2' onclick="loadTable(event);"><a class="page-link" >2</a></li>
+                  <li class="page-item"  value='3' id='page3' onclick="loadTable(event);"><a class="page-link" >3</a></li>
+                 
                 </ul>
               </nav>
         </div>
@@ -88,14 +81,14 @@
                     <label for="validationDefault06">Roll no:</label>
                     <input type="text" class="form-control" id="validationDefault06" placeholder="Roll No" required>
                   </div>
-                 <div class="col-md-3 mb-3">
+                 <!-- <div class="col-md-3 mb-3">
                     <label for="validationDefault03">City</label>
                     <input type="text" class="form-control" id="validationDefault03" placeholder="City" required>
                 </div>
                  <div class="col-md-3 mb-3">
                     <label for="validationDefaLaunch demo modalult04">Phone no</label>
                     <input type="text" class="form-control" id="validationDefault04" placeholder="Phone no" required>
-                </div>
+                </div> -->
                 <div class="col-md-3 mb-3">
                     <label for="validationDefault05">Upload Image</label>
                     <input type="file" class="form-control" id="validationDefault05">
