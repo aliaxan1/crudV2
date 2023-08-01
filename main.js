@@ -49,8 +49,9 @@ let callCount = 0;
 let itemsPerPage = 4;
 
 pagination = (data) => {
-  // document.getElementsByTagName('tbody')[0].innerHTML = "";
-  let totalPages = data.length / itemsPerPage;
+
+  let Pages = data.length / itemsPerPage;
+  let totalPages = Math.ceil(Pages);
   pageBtnCreation(totalPages);
   chunkFunc(data);
 }
@@ -107,8 +108,7 @@ showdata = (data) => {
     addRowToTable(element);
   });
 };
-addRowToTable = (element) => {    // add row to table
-  // clear the complete table
+addRowToTable = (element) => {    //function to add row to table
   let table = document.getElementsByTagName('tbody')[0];
   let row = table.insertRow();
   var firstNameCell = row.insertCell();
@@ -118,12 +118,12 @@ addRowToTable = (element) => {    // add row to table
   const actionCell = row.insertCell();
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
-  editButton.addEventListener("click", () => editUser(index));
+  editButton.addEventListener("click", () => editUser(element));
   actionCell.appendChild(editButton);
 
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Remove";
-  deleteButton.addEventListener("click", () => deleteUser(data));
+  deleteButton.addEventListener("click", () => deleteUser(element));
   actionCell.appendChild(deleteButton);
 
   firstNameCell.innerHTML = element.first_name;
@@ -139,8 +139,8 @@ addRowToTable = (element) => {    // add row to table
 
 
 //                   OPERATIONS ON TABLE DATA
-// create new row data
-submitForm = (event) => {
+// add row data
+ submitForm = (event) => {
   event.preventDefault();
   var formData = {
     first_name: document.getElementById("firstName").value,
@@ -149,22 +149,46 @@ submitForm = (event) => {
     avatar: document.getElementById("image").value,
   };
   dataFromApi.push(formData);
-  console.log("data after submission",dataFromApi);
+  document.getElementsByTagName('tbody')[0].innerHTML = "";
+  document.getElementById('pagination').innerHTML = "";
+  pagination(dataFromApi);
 
   document.getElementById("myForm").reset();
+  fetch(link , {
+    method: 'POST',
+    body: JSON.stringify(formData),
+    headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+    },
+})
+    .then((response) => response.json())
+    .then((data) => {
+        console.log("data created",data);
+    })
+    .catch((error) => {
+        console.log("error:data not created",error);
+    });
+
 };
-
-
 // edit row data
+
 
 
 
 // delete row data
 
+ deleteUser = (data) => {
+  // Remove the user from the array
+  console.log(data);
+  dataFromApi.splice(dataFromApi.indexOf(data), 1);
+  console.log(dataFromApi.indexOf(data));
+  console.log(dataFromApi);
+  document.getElementsByTagName('tbody')[0].innerHTML = "";
+  document.getElementById('pagination').innerHTML = "";
+  // Render users in the table
+  pagination(dataFromApi);
 
-
-// add row data
-
+}
 
 
 // search Functionality
@@ -172,10 +196,6 @@ let searchResult = [];
 document.getElementById("searchForm").addEventListener("submit", function (event) {
   event.preventDefault();
   var searchValue = document.getElementById("search").value;
-  // console.log("121332",searchValue);
-  ;
-  // console.log("dataFromApi",dataFromApi);
-  // // console.log("dataaaa",data);
   for (var i = 0; i < dataFromApi.length; i++) {
     if (dataFromApi[i].first_name.toLowerCase().includes(searchValue.toLowerCase())) {
       searchResult.push(dataFromApi[i]);

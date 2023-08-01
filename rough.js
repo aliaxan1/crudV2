@@ -132,7 +132,7 @@ document.getElementById("myForm").addEventListener("submit", function (event) {
         avatar: image
     };
     let pageNooo = 1;
-    fetch(link + + `?page=${pageNooo}`, {
+    fetch(link , {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
