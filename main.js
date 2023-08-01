@@ -28,7 +28,7 @@ let callCount = 0;
         if (pageNo == 2) {
           dataFromApi = [...tempArr, ...data];
           pagination(dataFromApi);
-          
+
         }
 
       })
@@ -38,11 +38,6 @@ let callCount = 0;
 
   }
 })(2); // number of calls to API
-
-
-
-
-
 
 
 //pagination
@@ -71,12 +66,12 @@ pageBtnCreation = (totalPages) => {
 
 
 // data chunk to display on table
-
+let pageNO = 1;
 chunkFunc = (data) => {
   let chunk = [];
   let value = 1;
   itemsPerPage = 4;
-  let pageNO = value;
+
 
   changePageNo = (event) => {
     pageNO = event.target.parentElement.value;
@@ -89,7 +84,7 @@ chunkFunc = (data) => {
 
   showChunkedTable = () => {
     let startElement = ((pageNO - 1) * itemsPerPage) + 1;
-    let endElement = pageNO * itemsPerPage;
+    let endElement = Math.min(startElement + itemsPerPage, data.length);
     document.getElementsByTagName('tbody')[0].innerHTML = "";// clear the complete table
     for (let i = startElement - 1; i < endElement; i++) {
       chunk.push(data[i]);
@@ -118,7 +113,7 @@ addRowToTable = (element) => {    //function to add row to table
   const actionCell = row.insertCell();
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
-  editButton.addEventListener("click", () => editUser(element));
+  editButton.addEventListener("click", () => openEditModal(element));
   actionCell.appendChild(editButton);
 
   const deleteButton = document.createElement("button");
@@ -140,7 +135,7 @@ addRowToTable = (element) => {    //function to add row to table
 
 //                   OPERATIONS ON TABLE DATA
 // add row data
- submitForm = (event) => {
+submitForm = (event) => {
   event.preventDefault();
   var formData = {
     first_name: document.getElementById("firstName").value,
@@ -154,39 +149,117 @@ addRowToTable = (element) => {    //function to add row to table
   pagination(dataFromApi);
 
   document.getElementById("myForm").reset();
-  fetch(link , {
+  fetch(link, {
     method: 'POST',
     body: JSON.stringify(formData),
     headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+      'Content-type': 'application/json; charset=UTF-8',
     },
-})
+  })
     .then((response) => response.json())
     .then((data) => {
-        console.log("data created",data);
+      console.log("data created", data);
     })
     .catch((error) => {
-        console.log("error:data not created",error);
+      console.log("error:data not created", error);
     });
 
 };
-// edit row data
+
+// // edit row data
+// Global variable to store the edited user's index
+let editingRowIndex = -1;
+
+// Function to open the edit modal
+openEditModal = (data) => {
+  // Find the index of the user to be edited in the dataFromApi array
+  const indexToEdit = dataFromApi.findIndex((user) => user.id === data.id);
+
+  // If the user is not found, exit the function
+  if (indexToEdit === -1) {
+    return;
+  }
+
+  // Store the index of the row being edited
+  editingRowIndex = indexToEdit;
+
+  // Fill the edit form with the user data to be edited
+  const userToEdit = dataFromApi[indexToEdit];
+  document.getElementById("editFirstName").value = userToEdit.first_name;
+  document.getElementById("editLastName").value = userToEdit.last_name;
+  document.getElementById("editRollNo").value = userToEdit.id;
+  document.getElementById("editImage").value = userToEdit.avatar;
+
+  // Show the edit modal
+  document.getElementById("editModal").style.display = "block";
+};
+
+// Function to close the edit modal
+closeModal = () => {
+  document.getElementById("editModal").style.display = "none";
+
+  editingRowIndex = -1;
+
+  // Clear the edit form
+  document.getElementById("editForm").reset();
+};
+
+// Add an event listener to the edit form for updating edited data
+document.getElementById("editForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  // If a row is being edited, update the data in the dataFromApi array
+  if (editingRowIndex !== -1) {
+    const editedData = {
+      first_name: document.getElementById("editFirstName").value,
+      last_name: document.getElementById("editLastName").value,
+      id: document.getElementById("editRollNo").value,
+      avatar: document.getElementById("editImage").value,
+    };
+
+    dataFromApi[editingRowIndex] = editedData;
+
+    // Reset the editingRowIndex to -1 to indicate no row is being edited
+    editingRowIndex = -1;
+
+    // Close the edit modal
+    closeModal();
+
+    // Clear the table and re-render it
+    document.getElementsByTagName("tbody")[0].innerHTML = "";
+    document.getElementById("pagination").innerHTML = "";
+    pagination(dataFromApi);
+    fetch('https://jsonplaceholder.typicode.com/posts/1', {
+      method: 'PUT',
+      body: JSON.stringify(editedData),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+
+  }
+});
+
+
 
 
 
 
 // delete row data
 
- deleteUser = (data) => {
+deleteUser = (data) => {
   // Remove the user from the array
-  console.log(data);
   dataFromApi.splice(dataFromApi.indexOf(data), 1);
-  console.log(dataFromApi.indexOf(data));
-  console.log(dataFromApi);
   document.getElementsByTagName('tbody')[0].innerHTML = "";
   document.getElementById('pagination').innerHTML = "";
   // Render users in the table
   pagination(dataFromApi);
+  fetch('https://jsonplaceholder.typicode.com/posts/1', {
+    method: 'DELETE',
+  }).then((response) => response.json())
+    .then((data) => { console.log("data deleted", data); });
 
 }
 
