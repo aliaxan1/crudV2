@@ -67,33 +67,24 @@
                 <div class="form-row">
                   <div class="col-md-4 mb-3">
                     <label for="validationDefault01">First name</label>
-                    <input type="text" class="form-control" id="validationDefault01" placeholder="First name"  required>
+                    <input type="text" class="form-control" id="firstName" placeholder="First name"  required>
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="validationDefault02">Last name</label>
-                    <input type="text" class="form-control" id="validationDefault02" placeholder="Last name"  required>
+                    <input type="text" class="form-control" id="lastName" placeholder="Last name"  required>
                   </div>
                   <div class="col-md-3 mb-3">
                     <label for="validationDefault06">Roll no:</label>
-                    <input type="text" class="form-control" id="validationDefault06" placeholder="Roll No" required>
+                    <input type="tel" class="form-control" id="rollNo" placeholder="Roll No:000" pattern="[0-9]{3}" required>
                   </div>
-                 <!-- <div class="col-md-3 mb-3">
-                    <label for="validationDefault03">City</label>
-                    <input type="text" class="form-control" id="validationDefault03" placeholder="City" required>
-                </div>
-                 <div class="col-md-3 mb-3">
-                    <label for="validationDefaLaunch demo modalult04">Phone no</label>
-                    <input type="text" class="form-control" id="validationDefault04" placeholder="Phone no" required>
-                </div> -->
                 <div class="col-md-3 mb-3">
                     <label for="validationDefault05">Upload Image</label>
-                    <input type="file" class="form-control" id="validationDefault05">
-                    
+                    <input type="file" class="form-control" id="image">
                 </div>
         
               </div>     
               <div class="model-footer form-sm text-center">
-                <button class="btn btn-primary" type="submit" id="create-btn" method="POST">Submit form</button>
+                <button class="btn btn-primary" type="submit" id="create-btn" method="POST" onclick="submitForm(event);">Submit form</button>
               </div>  
             </form>
         </div>

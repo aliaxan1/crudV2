@@ -28,9 +28,7 @@ let callCount = 0;
         if (pageNo == 2) {
           dataFromApi = [...tempArr, ...data];
           pagination(dataFromApi);
-          // showdata(dataFromApi);
-
-
+          
         }
 
       })
@@ -51,6 +49,7 @@ let callCount = 0;
 let itemsPerPage = 4;
 
 pagination = (data) => {
+  // document.getElementsByTagName('tbody')[0].innerHTML = "";
   let totalPages = data.length / itemsPerPage;
   pageBtnCreation(totalPages);
   chunkFunc(data);
@@ -103,16 +102,12 @@ chunkFunc = (data) => {
 
 // Render data on table  
 showdata = (data) => {
-  const recordsLength = data.length;
   document.getElementsByTagName('tbody')[0].innerHTML = "";
   data.forEach((element) => {
     addRowToTable(element);
   });
 };
-
-
-// add row to table
-addRowToTable = (element) => {
+addRowToTable = (element) => {    // add row to table
   // clear the complete table
   let table = document.getElementsByTagName('tbody')[0];
   let row = table.insertRow();
@@ -144,7 +139,20 @@ addRowToTable = (element) => {
 
 
 //                   OPERATIONS ON TABLE DATA
+// create new row data
+submitForm = (event) => {
+  event.preventDefault();
+  var formData = {
+    first_name: document.getElementById("firstName").value,
+    last_name: document.getElementById("lastName").value,
+    id: document.getElementById("rollNo").value,
+    avatar: document.getElementById("image").value,
+  };
+  dataFromApi.push(formData);
+  console.log("data after submission",dataFromApi);
 
+  document.getElementById("myForm").reset();
+};
 
 
 // edit row data
@@ -159,6 +167,22 @@ addRowToTable = (element) => {
 
 
 
-// search row data
-
-
+// search Functionality
+let searchResult = [];
+document.getElementById("searchForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  var searchValue = document.getElementById("search").value;
+  // console.log("121332",searchValue);
+  ;
+  // console.log("dataFromApi",dataFromApi);
+  // // console.log("dataaaa",data);
+  for (var i = 0; i < dataFromApi.length; i++) {
+    if (dataFromApi[i].first_name.toLowerCase().includes(searchValue.toLowerCase())) {
+      searchResult.push(dataFromApi[i]);
+    }
+  }
+  notSearch = false;
+  showdata(searchResult);
+  document.getElementById("searchForm").reset();
+  searchResult = [];
+});

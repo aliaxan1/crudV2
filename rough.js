@@ -5,7 +5,7 @@ let dataFromApi = [];   //array to store data from API
 const link = "https://reqres.in/api/users";  //link to API
 
 
-itemsPerPage=4;
+itemsPerPage = 4;
 
 
 const fetchTableData = () => {
@@ -13,66 +13,66 @@ const fetchTableData = () => {
 }
 
 async function getData(pageNo) {
-    const response = await fetch(link + `?page=${pageNo}` );
+    const response = await fetch(link + `?page=${pageNo}`);
     const data = await response.json();
     let reqData = data.data;
-    console.log("reqData",reqData);
+    console.log("reqData", reqData);
     return reqData;
 }   //function to get data from API
 
-for(let pageNo=1;pageNo<3;pageNo++){
-    
+for (let pageNo = 1; pageNo < 3; pageNo++) {
+
     getData(pageNo)  //calling the function
         .then((data) => {
-           if (pageNo == 1) {
+            if (pageNo == 1) {
                 tempArr = data;
-           } 
+            }
             if (pageNo == 2) {
-                dataFromApi = [...tempArr,...data];
+                dataFromApi = [...tempArr, ...data];
                 showdata(dataFromApi);
-                
-                
+
+
             }
 
         })
         .catch((error) => {
-            console.log("error",error);
-         });  //adding data to the table          
+            console.log("error", error);
+        });  //adding data to the table          
 
 }
 
 
-function loadTable(event){
-    const liElement = event.target.closest('li'); 
+function loadTable(event) {
+    const liElement = event.target.closest('li');
     const value = liElement.getAttribute('value');
     const itemsPerPage = 4;
     let pageBtnNO = value;
-    startElement = ((pageBtnNO-1)*itemsPerPage)+1;
-    endElement = pageBtnNO*itemsPerPage;
+    startElement = ((pageBtnNO - 1) * itemsPerPage) + 1;
+    endElement = pageBtnNO * itemsPerPage;
     // console.log(startElement,endElement);
     document.getElementsByTagName('tbody')[0].innerHTML = "";// clear the complete table
-    for (let i = startElement-1; i < endElement; i++) {
-        
-        
-        addRowToTable(dataFromApi[i]);        
+    for (let i = startElement - 1; i < endElement; i++) {
+
+
+        addRowToTable(dataFromApi[i]);
     }
-}; 
+};
 
 
 
 
 
 //show complete api data
-function showdata(data){
+function showdata(data) {
     document.getElementsByTagName('tbody')[0].innerHTML = "";
-   if (notSearch) {
-            for ( data in dataFromApi) {
-            addRowToTable(dataFromApi[data]);        
-            } 
+    if (notSearch) {
+        for (data in dataFromApi) {
+            addRowToTable(dataFromApi[data]);
+        }
     } else {
-    for ( data in searchResult) {
-        addRowToTable(searchResult[data]);        
-        } 
+        for (data in searchResult) {
+            addRowToTable(searchResult[data]);
+        }
     }
 }
 
@@ -82,52 +82,48 @@ function showdata(data){
 function addRowToTable(data) {
     var table = document.getElementsByTagName('tbody')[0];
     var row = table.insertRow();
-    
+
     // Create and insert cells with the form data
     var firstNameCell = row.insertCell();
     var lastNameCell = row.insertCell();
     var rollNoCell = row.insertCell();
     var imageCell = row.insertCell();
     const actionCell = row.insertCell();
-        const editButton = document.createElement("button");
-        editButton.textContent = "Edit";
-        editButton.addEventListener("click", () => editUser(index));
-        actionCell.appendChild(editButton);
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.addEventListener("click", () => editUser(index));
+    actionCell.appendChild(editButton);
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Remove";
-        deleteButton.addEventListener("click", () => deleteUser(data));
-        actionCell.appendChild(deleteButton);
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Remove";
+    deleteButton.addEventListener("click", () => deleteUser(data));
+    actionCell.appendChild(deleteButton);
 
     firstNameCell.innerHTML = data.first_name;
     lastNameCell.innerHTML = data.last_name;
     rollNoCell.innerHTML = data.id;
     // cityCell.innerHTML = data.city;
     // phoneNoCell.innerHTML = data.phone;
-    
+
     // console.log(data.avatar);
 
     if (data.avatar == "") {
         imageCell.innerHTML = `<img src="" alt="image not uploaded" width="100px" height="100px">`;
-    }else{
+    } else {
         imageCell.innerHTML = `<img src="${data.avatar}" alt="image" width="100px" height="100px">`;
     }
-    
-    
+
+
 }
 
 // Function to handle form submission
-document.getElementById("myForm").addEventListener("submit", function(event) {
+document.getElementById("myForm").addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent form submission
-    
     // Get the form input values
     var firstName = document.getElementById("validationDefault01").value;
     var lastName = document.getElementById("validationDefault02").value;
     var rollNo = document.getElementById("validationDefault06").value;
-    // var city = document.getElementById("validationDefault03").value;
-    // var phoneNo = document.getElementById("validationDefault04").value;
     var image = document.getElementById("validationDefault05").value;
-    
     // Create an object to hold the data
     var formData = {
         first_name: firstName,
@@ -135,35 +131,24 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         id: rollNo,
         avatar: image
     };
-    
-let pageNooo = 1;
-
-   fetch(link + + `?page=${pageNooo}`, {
+    let pageNooo = 1;
+    fetch(link + + `?page=${pageNooo}`, {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
-   })
-// fetch(link, {
-//     method: 'POST',
-//     body: JSON.stringify(formData),
-//     headers: {
-//         'Content-type': 'application/json; charset=UTF-8',
-//     },
-// })
-   .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
     })
-   .catch((error) => {
-         console.log(error);
-    });
-
-
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     addRowToTable(formData);
-    
-   
+
+
     document.getElementById("myForm").reset();
 });
 // Function to delete a user
@@ -173,13 +158,13 @@ function deleteUser(data) {
     dataFromApi.splice(dataFromApi.indexOf(data), 1);
 
     // Render users in the table
-     showdata(dataFromApi);
+    showdata(dataFromApi);
     console.log(dataFromApi);
     // window.location.reload();
 }
 
 
-document.getElementById("searchForm").addEventListener("submit", function(event) {
+document.getElementById("searchForm").addEventListener("submit", function (event) {
     event.preventDefault();
     var searchValue = document.getElementById("search").value;
     // console.log("121332",searchValue);
@@ -191,7 +176,7 @@ document.getElementById("searchForm").addEventListener("submit", function(event)
             searchResult.push(dataFromApi[i]);
         }
     }
-    notSearch = false;  
+    notSearch = false;
     showdata(searchResult);
     document.getElementById("searchForm").reset();
     searchResult = [];
