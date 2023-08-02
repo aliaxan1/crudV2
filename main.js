@@ -28,6 +28,7 @@ let callCount = 0;
         if (pageNo == 2) {
           dataFromApi = [...tempArr, ...data];
           pagination(dataFromApi);
+          console.log("data fetched",dataFromApi);
 
         }
 
@@ -113,6 +114,8 @@ addRowToTable = (element) => {    //function to add row to table
   const actionCell = row.insertCell();
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
+  editButton.setAttribute("data-bs-toggle", "modal");
+  editButton.setAttribute("data-bs-target", "#editModal");
   editButton.addEventListener("click", () => openEditModal(element));
   actionCell.appendChild(editButton);
 
@@ -137,6 +140,7 @@ addRowToTable = (element) => {    //function to add row to table
 // add row data
 submitForm = (event) => {
   event.preventDefault();
+  
   var formData = {
     first_name: document.getElementById("firstName").value,
     last_name: document.getElementById("lastName").value,
@@ -172,6 +176,7 @@ let editingRowIndex = -1;
 
 // Function to open the edit modal
 openEditModal = (data) => {
+  console.log("data",data);
   // Find the index of the user to be edited in the dataFromApi array
   const indexToEdit = dataFromApi.findIndex((user) => user.id === data.id);
 
@@ -181,7 +186,7 @@ openEditModal = (data) => {
   }
 
   // Store the index of the row being edited
-  editingRowIndex = indexToEdit;
+  // editingRowIndex = indexToEdit;
 
   // Fill the edit form with the user data to be edited
   const userToEdit = dataFromApi[indexToEdit];
@@ -190,13 +195,12 @@ openEditModal = (data) => {
   document.getElementById("editRollNo").value = userToEdit.id;
   document.getElementById("editImage").value = userToEdit.avatar;
 
-  // Show the edit modal
-  document.getElementById("editModal").style.display = "block";
+
 };
 
 // Function to close the edit modal
 closeModal = () => {
-  document.getElementById("editModal").style.display = "none";
+  
 
   editingRowIndex = -1;
 
