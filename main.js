@@ -10,8 +10,6 @@ async function apiCall(pageNo) {
   return reqData;
 }   //function to get data from API (one call)
 
-
-
 // function to get data from API  [IIFE]
 let callCount = 0;
 (async (calls) => {
@@ -28,10 +26,7 @@ let callCount = 0;
         if (pageNo == 2) {
           dataFromApi = [...tempArr, ...data];
           pagination(dataFromApi);
-          console.log("data fetched",dataFromApi);
-
         }
-
       })
       .catch((error) => {
         console.log("error", error);
@@ -39,7 +34,6 @@ let callCount = 0;
 
   }
 })(2); // number of calls to API
-
 
 //pagination
 let itemsPerPage = 4;
@@ -52,19 +46,12 @@ pagination = (data) => {
   chunkFunc(data);
 }
 
-
-
-
-
 pageBtnCreation = (totalPages) => {
   for (let i = 1; i <= totalPages; i++) {
     let ul = document.getElementById('pagination');
     ul.innerHTML += `<li class="page-item"  value='${i}' id='page${i}' onclick="changePageNo(event);"><a class="page-link" >${i}</a></li>`;
   }
-
 }
-
-
 
 // data chunk to display on table
 let pageNO = 1;
@@ -73,15 +60,12 @@ chunkFunc = (data) => {
   let value = 1;
   itemsPerPage = 4;
 
-
   changePageNo = (event) => {
     pageNO = event.target.parentElement.value;
     startElement = 0;
     endElement = 0;
     showChunkedTable();
   }
-
-
 
   showChunkedTable = () => {
     let startElement = ((pageNO - 1) * itemsPerPage) + 1;
@@ -112,6 +96,7 @@ addRowToTable = (element) => {    //function to add row to table
   var rollNoCell = row.insertCell();
   var imageCell = row.insertCell();
   const actionCell = row.insertCell();
+
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
   editButton.setAttribute("data-bs-toggle", "modal");
@@ -134,13 +119,10 @@ addRowToTable = (element) => {    //function to add row to table
   }
 };
 
-
-
 //                   OPERATIONS ON TABLE DATA
 // add row data
 submitForm = (event) => {
   event.preventDefault();
-  
   var formData = {
     first_name: document.getElementById("firstName").value,
     last_name: document.getElementById("lastName").value,
@@ -151,7 +133,6 @@ submitForm = (event) => {
   document.getElementsByTagName('tbody')[0].innerHTML = "";
   document.getElementById('pagination').innerHTML = "";
   pagination(dataFromApi);
-
   document.getElementById("myForm").reset();
   fetch(link, {
     method: 'POST',
@@ -176,7 +157,7 @@ let editingRowIndex = -1;
 
 // Function to open the edit modal
 openEditModal = (data) => {
-  console.log("data",data);
+  console.log("data", data);
   // Find the index of the user to be edited in the dataFromApi array
   const indexToEdit = dataFromApi.findIndex((user) => user.id === data.id);
 
@@ -186,24 +167,22 @@ openEditModal = (data) => {
   }
 
   // Store the index of the row being edited
-  // editingRowIndex = indexToEdit;
+  editingRowIndex = indexToEdit;
 
   // Fill the edit form with the user data to be edited
   const userToEdit = dataFromApi[indexToEdit];
   document.getElementById("editFirstName").value = userToEdit.first_name;
   document.getElementById("editLastName").value = userToEdit.last_name;
   document.getElementById("editRollNo").value = userToEdit.id;
-  document.getElementById("editImage").value = userToEdit.avatar;
+  // document.getElementById("editImage").value = userToEdit.avatar;
 
 
 };
 
 // Function to close the edit modal
 closeModal = () => {
-  
-
+  // Reset the editingRowIndex to -1 to indicate no row is being edited
   editingRowIndex = -1;
-
   // Clear the edit form
   document.getElementById("editForm").reset();
 };
@@ -211,7 +190,6 @@ closeModal = () => {
 // Add an event listener to the edit form for updating edited data
 document.getElementById("editForm").addEventListener("submit", function (event) {
   event.preventDefault();
-
   // If a row is being edited, update the data in the dataFromApi array
   if (editingRowIndex !== -1) {
     const editedData = {
@@ -220,15 +198,12 @@ document.getElementById("editForm").addEventListener("submit", function (event) 
       id: document.getElementById("editRollNo").value,
       avatar: document.getElementById("editImage").value,
     };
-
     dataFromApi[editingRowIndex] = editedData;
 
     // Reset the editingRowIndex to -1 to indicate no row is being edited
     editingRowIndex = -1;
-
     // Close the edit modal
     closeModal();
-
     // Clear the table and re-render it
     document.getElementsByTagName("tbody")[0].innerHTML = "";
     document.getElementById("pagination").innerHTML = "";
@@ -246,13 +221,7 @@ document.getElementById("editForm").addEventListener("submit", function (event) 
   }
 });
 
-
-
-
-
-
 // delete row data
-
 deleteUser = (data) => {
   // Remove the user from the array
   dataFromApi.splice(dataFromApi.indexOf(data), 1);
@@ -266,7 +235,6 @@ deleteUser = (data) => {
     .then((data) => { console.log("data deleted", data); });
 
 }
-
 
 // search Functionality
 let searchResult = [];
